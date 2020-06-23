@@ -1,14 +1,14 @@
 {
   "defaultSeverity": "warning",
-  "extends": [
-    "tslint:recommended"
-  ],
   "linterOptions": {
     "exclude": [
       "node_modules/**"
     ]
   },
-  "rules": {
+  "rules": {    
+    "semicolon":false, 
+    "trailing-comma": false ,
+    "trailing-whitespace": false,
     "indent": [true, "spaces", 2],
     "interface-name": false,
     "no-consecutive-blank-lines": false,
