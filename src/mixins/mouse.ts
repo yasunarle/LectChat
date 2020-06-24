@@ -1,8 +1,8 @@
 import { ref, onMounted, onUnmounted } from '@vue/composition-api'
 
 export function useMousePosition() {
-  const x = ref(0)
-  const y = ref(0)
+  const x = ref<number>(0)
+  const y = ref<number>(0)
 
   function update(e: any) {
     x.value = e.pageX

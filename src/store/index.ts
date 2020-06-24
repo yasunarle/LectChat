@@ -1,13 +1,18 @@
 import { reactive } from '@vue/composition-api';
 
+interface IUser {
+  user: {
+    name: string
+    id: string
+  }
+}
 export default function userStore() {
-  const state = reactive({
+  const state = reactive<IUser>({
     user:{
       name: 'yasunari',
       id: 'u7df25c588m737'
     }
   })
-
   const setUserFireStore = async () => {
     console.log('test')
   }

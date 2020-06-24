@@ -15,21 +15,24 @@ import { defineComponent, reactive, computed, onMounted, SetupContext } from '@v
 import userStore from '@/store/index';
 import TheHeader from '@/components/common/TheHeader.vue'
 import { useMousePosition } from '@/mixins/mouse'
+import { useFirebase } from '@/plugins/firebase'
 
-
-export default defineComponent({ // ????????
+export default defineComponent({
   components:{
     TheHeader
   },
   setup(_, ctx: SetupContext){
     onMounted(() => {
-      console.log(ctx.root.$data)
+      console.log(ctx.root)              
     })
     const user = userStore()
     const userName = computed(() => user.userName)
     const { x, y } = useMousePosition()    
+
+    const testfire = useFirebase()
+
     //
-    // return => templete ?????????????
+    // return => to exporsed templete 
     //
     return {
       userName,
