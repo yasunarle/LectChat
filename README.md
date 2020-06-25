@@ -2,24 +2,24 @@
 Vue.js, TypeScript, firebase で作りました。
 
 ## git comment prefix
-feat: A new feature
-fix: A bug fix
-docs: Documentation only changes
-style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-refactor: A code change that neither fixes a bug nor adds a feature
-perf: A code change that improves performance
-test: Adding missing or correcting existing tests
-chore: Changes to the build process or auxiliary tools and libraries such as documentation generation
+feat: A new feature  
+fix: A bug fix  
+docs: Documentation only changes  
+style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)  
+refactor: A code change that neither fixes a bug nor adds a feature  
+perf: A code change that improves performance  
+test: Adding missing or correcting existing tests  
+chore: Changes to the build process or auxiliary tools and libraries such as documentation generation  
 
 ### 日本語バージョン
-feat: 新機能
-fix: バグ修正
-docs: ドキュメントのみの変更
-style: コードの意味に影響を与えない変更（空白、書式設定、セミコロンの欠落など)
-refactor: リファクタリング
-perf: パフォーマンスを向上させるコードの変更
-test: 不足しているテストを追加したり、既存のテストを修正したりする
-chore: ビルドプロセスやドキュメント生成などの補助ツールやライブラリの変更
+feat: 新機能  
+fix: バグ修正  
+docs: ドキュメントのみの変更  
+style: コードの意味に影響を与えない変更（空白、書式設定、セミコロンの欠落など)  
+refactor: リファクタリング  
+perf: パフォーマンスを向上させるコードの変更  
+test: 不足しているテストを追加したり、既存のテストを修正したりする  
+chore: ビルドプロセスやドキュメント生成などの補助ツールやライブラリの変更  
 
 
 ## Project setup
