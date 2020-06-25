@@ -33,4 +33,8 @@ body{
   -moz-osx-font-smoothing: grayscale;  
   color: #2c3e50;  
 }
+.app-logo{
+  font-size: 30px;
+  font-weight: bold;
+}
 </style>

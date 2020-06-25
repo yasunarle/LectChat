@@ -7,7 +7,8 @@
     <div class="user-state">
       <h1>user Auth state -- firebse</h1>
       <div v-if="getUser">
-        <h3>username: {{ getUser.displayName }} </h3>        
+        <h3>username: {{ getUser.name }} </h3>        
+        <p>id: {{ getUser.id }}</p>        
       </div>
     </div>
   </div>

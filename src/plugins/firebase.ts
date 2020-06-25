@@ -27,11 +27,27 @@ export default function useFirebase(){
   function userUpdate(user: object | null){    
     state.user = user  
   }
-  // Actions 
+  // Actions   
   // init Auth state
   onMounted(() => {
     firebase.auth().onAuthStateChanged(user => {      
-      userUpdate(user)      
+      if( user ){
+        const userRef = firebase.firestore().collection("users").doc(user.uid)
+        userRef.get().then( doc => {
+          if( doc.exists ){            
+            const userObj = {...doc.data()}
+            userUpdate(userObj)
+          } else {
+            userRef.set({
+              id: user.uid,
+              name: user.displayName,
+              photoURL: user.photoURL              
+            })
+          }
+        })
+      } else {
+        userUpdate(null)
+      }      
     });
   })
   return {

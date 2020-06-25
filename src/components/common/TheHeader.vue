@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="logo">
-      <img alt="Vue logo" src="@/assets/logo.png">      
+      <div class="app-logo">LECT</div>
     </div>    
     <div v-if="getUser">
       <button @click="logOut">Log out</button>
@@ -46,7 +46,7 @@ export default defineComponent({
 .header{
   height: 80px;
   width: 100%;
-  padding: 10px;
+  // padding: 10px;
   border-bottom: 1px solid black;
   display: flex;  
   justify-content: space-between;
