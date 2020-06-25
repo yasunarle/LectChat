@@ -13,29 +13,49 @@ const config: any = {
 firebase.initializeApp(config)
 
 interface IUser {
-  user: object | null
+  id: string,
+  name: string,
+  photoURL: string 
 }
-
-const state = reactive<IUser>({
-  user: null
+interface IFireBaseState {
+  user: IUser | null
+}
+const state = reactive<IFireBaseState>({
+  user: null,
 })
 
 export default function useFirebase(){
   // Getters
   const getUser = computed(() => state.user )
   // Mutations
-  function userUpdate(user: object | null){    
+  function userUpdate(user: IUser | null){
     state.user = user  
   }
   // Actions   
+  function createRoom(room: any){
+    if ( state.user ){
+      firebase.firestore().collection('chatRooms').doc().set({
+        owner_id: state.user.id, 
+        created_at: new Date(), 
+        room_name: room.roomName,
+        description: room.description,
+        genre: room.genre,
+        // + should add subcollection +
+      }).then( res => {
+        console.log(res)
+      })
+    } else {
+      alert('To create new room, Please Sign in')
+    }
+  }
   // init Auth state
   onMounted(() => {
     firebase.auth().onAuthStateChanged(user => {      
       if( user ){
-        const userRef = firebase.firestore().collection("users").doc(user.uid)
+        const userRef = firebase.firestore().collection('users').doc(user.uid)
         userRef.get().then( doc => {
           if( doc.exists ){            
-            const userObj = {...doc.data()}
+            const userObj = {...doc.data()} as IUser
             userUpdate(userObj)
           } else {
             userRef.set({
@@ -51,7 +71,8 @@ export default function useFirebase(){
     });
   })
   return {
-    getUser
+    getUser,
+    createRoom
   }
 }
 
