@@ -1,0 +1,44 @@
+<template>
+  <div class="test-container">
+    <div class="mixins">  
+      <h1>mixins</h1>    
+      <span>x: {{ x }}, y: {{ y }}</span>      
+    </div>
+    <div class="user-state">
+      <h1>user Auth state -- firebse</h1>
+      <div v-if="getUser">
+        <h3>username: {{ getUser.displayName }} </h3>        
+      </div>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import { defineComponent, reactive, computed, onMounted, SetupContext } from '@vue/composition-api'
+import { useMousePosition } from '@/mixins/mouse'
+import useFirebase from '@/plugins/firebase'
+
+export default defineComponent({
+  setup(_, ctx: SetupContext){
+    onMounted(() => {
+      console.log(ctx.root.$el)
+    })
+    // localstate
+    const state = reactive({
+      inputText: ''
+    })
+    // useMouse
+    const { x, y } = useMousePosition()    
+    // useFirebase    
+    const { getUser } = useFirebase()
+    //
+    // return => to exporsed templete 
+    //
+    return {
+      state,
+      x,
+      y,
+      getUser    
+    }    
+  }
+})
+</script>

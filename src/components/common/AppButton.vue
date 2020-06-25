@@ -16,6 +16,8 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 button{
+  height: 60px;
+  width: 70px;
   color: #42b983;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }

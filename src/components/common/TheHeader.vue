@@ -1,17 +1,44 @@
 <template>
   <div class="header">
     <div class="logo">
-      <img alt="Vue logo" src="@/assets/logo.png">
-      <AppButton>Login</AppButton>
+      <img alt="Vue logo" src="@/assets/logo.png">      
     </div>    
+    <div v-if="getUser">
+      <button @click="logOut">Log out</button>
+    </div>  
+    <div v-else>
+      <button @click="logIn">Login</button>
+    </div>      
   </div>
 </template>
 <script>
-import AppButton from '@/components/common/AppButton.vue'
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
+import firebase from 'firebase'
+// store
+import userStore from '@/store/index'
+// plugins
+import useFirebase from '@/plugins/firebase'
+// components
+// import AppButton from '@/components/common/AppButton.vue'
+
 export default defineComponent({
   components: { 
-    AppButton
+    // AppButton
+  },
+  setup(){
+    const { getUser } = useFirebase()        
+    function logIn(){
+      const provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+    }
+    function logOut(){
+      firebase.auth().signOut()
+    }
+    return {
+      getUser,      
+      logIn,
+      logOut
+    }
   }
 })
 </script>
@@ -21,6 +48,8 @@ export default defineComponent({
   width: 100%;
   padding: 10px;
   border-bottom: 1px solid black;
+  display: flex;  
+  justify-content: space-between;
   .logo{
     height: 80px;
     img{

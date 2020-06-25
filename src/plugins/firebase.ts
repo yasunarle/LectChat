@@ -1,15 +1,5 @@
-import Vue from 'vue'
 import firebase from 'firebase'
-import { inject, reactive, onMounted } from '@vue/composition-api'
-
-// declare module 'vue/types/vue' {
-//   interface Vue {
-//     $auth: firebase.auth.Auth & {
-//       user: any
-//       currentUser: any
-//     }
-//   }
-// }
+import { reactive, onMounted, computed } from '@vue/composition-api'
 
 const config: any = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -22,21 +12,31 @@ const config: any = {
 }
 firebase.initializeApp(config)
 
-interface User {
+interface IUser {
   user: object | null
 }
-export function useFirebase(){
-  const state = reactive<User>({
-    user: null
-  })
+
+const state = reactive<IUser>({
+  user: null
+})
+
+export default function useFirebase(){
+  // Getters
+  const getUser = computed(() => state.user )
+  // Mutations
   function userUpdate(user: object | null){    
-    state.user = user    
+    state.user = user  
   }
+  // Actions 
+  // init Auth state
   onMounted(() => {
     firebase.auth().onAuthStateChanged(user => {      
       userUpdate(user)      
     });
   })
+  return {
+    getUser
+  }
 }
 
 

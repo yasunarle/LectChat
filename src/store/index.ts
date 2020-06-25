@@ -1,30 +1,31 @@
-import { reactive } from '@vue/composition-api';
-
-interface IUser {
+import { reactive, computed } from '@vue/composition-api';
+import Vue from 'vue'
+import CompositionApi from '@vue/composition-api'
+Vue.use(CompositionApi);
+interface ITest { 
+  test: string
   user: {
     name: string
     id: string
   }
 }
-export default function userStore() {
-  const state = reactive<IUser>({
-    user:{
-      name: 'yasunari',
-      id: 'u7df25c588m737'
-    }
-  })
-  const setUserFireStore = async () => {
-    console.log('test')
+const state = reactive<ITest>({
+  test: 'testify',
+  user:{
+    name: 'yasunari',
+    id: 'u7df25c588m737'
   }
-
+})
+export default function userStore() {
+  // getter
+  const getTest = computed(() => state.test )
+  // setter
+  function setTest(test: string){
+    state.test = test
+  }
   return {    
-    get userName() {
-      return state.user.name;
-    },
-    setUserFireStore
-    // increment() {
-    //   state.count += 1;
-    // },
+    getTest,
+    setTest
   }
 }
 

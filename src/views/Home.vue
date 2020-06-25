@@ -1,17 +1,14 @@
 <template>
   <div class="home">  
-    <AppButton>Login</AppButton> 
+    <h1>This App is made by comopsition API</h1>
+    <p>↓test of composition API↓</p>
+    <router-link to="/compositionapi">Go to URI</router-link>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import AppButton from '@/components/common/AppButton.vue'
-
+// import AppButton from '@/components/common/AppButton.vue'
 export default {
-  name: 'Home',
-  components: {
-    AppButton
-  }
+  name: 'Home'
 }
 </script>
