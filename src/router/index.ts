@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import Home from '../views/Home.vue';
 import Compositionapi from '../views/Composition-api.vue';
+// views
+import Home from '../views/Home.vue';
+import ChatRoom from '../views/ChatRoom.vue';
 
 Vue.use(VueRouter);
 
@@ -16,6 +18,11 @@ const routes: RouteConfig[] = [
     name: 'Compositionapi',
     component: Compositionapi
   },
+  {
+    path: '/room/:id',
+    name: 'room',
+    component: ChatRoom
+  }
 ];
 
 const router = new VueRouter({

@@ -37,7 +37,7 @@ export default function useFirebase(){
       firebase.firestore().collection('chatRooms').doc().set({
         owner_id: state.user.id, 
         created_at: new Date(), 
-        room_name: room.roomName,
+        title: room.roomName,
         description: room.description,
         genre: room.genre,
         // + should add subcollection +
@@ -47,6 +47,19 @@ export default function useFirebase(){
     } else {
       alert('To create new room, Please Sign in')
     }
+  }
+  function createChat(roomId: string){
+    if ( state.user ){
+      firebase.firestore().collection('chatRooms').doc(roomId)
+        .collection("chats").add({
+          poster: "yasunarle",
+          text: "手越最高"
+        }).then( res => {
+          console.log(res)
+        })
+    } else {
+      alert('To chat in a room, Please Sign in')
+    }    
   }
   // init Auth state
   onMounted(() => {
@@ -72,7 +85,8 @@ export default function useFirebase(){
   })
   return {
     getUser,
-    createRoom
+    createRoom,
+    createChat
   }
 }
 
