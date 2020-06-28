@@ -1,6 +1,6 @@
 # lect-chat
 Vue.js, TypeScript, firebase で作りました。
-
+Vue 3 で実装される Composition API を使ってみました。
 
 ## git comment prefix
 feat: A new feature  

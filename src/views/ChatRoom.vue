@@ -1,6 +1,5 @@
 <template>
-  <div class="chat-room">
-    {{ state.roomData }}
+  <div class="chat-room">    
     <div v-if="state.roomData">
       <div class="room-data">
         <h1>{{ state.roomData.title }}</h1>
@@ -22,7 +21,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent, reactive, onMounted, SetupContext, toRefs } from "@vue/composition-api"
 import firebase from 'firebase'
 import useFirebase from '@/plugins/firebase'

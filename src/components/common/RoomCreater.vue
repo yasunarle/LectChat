@@ -1,5 +1,6 @@
 <template>
   <div class="room-creater">
+    <h1>RoomCreater</h1> 
     <input type="text" placeholder="Room Name" v-model="state.roomName"> 
     <input type="text" placeholder="description" v-model="state.description">
     <input type="text" placeholder="genre" v-model="state.genre">
