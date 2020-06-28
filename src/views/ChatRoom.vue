@@ -10,8 +10,12 @@
       <button @click="sendBtn">Post</button>
       <div class="chats">
         <div v-for="(chat, index) in state.roomData.chats">
-          <div>
-            {{ chat }}
+          <div class="chat">            
+            <h3>{{ chat.poster }}</h3>
+            <p>{{ chat.text }}</p>
+            <p>
+              {{ chat.created_at.toDate().getHours() }} : {{ chat.created_at.toDate().getMinutes() }}
+            </p>
           </div>
         </div>
       </div>      
