@@ -23,7 +23,11 @@ export default defineComponent({
       .then((snapshot) => {
         const docs = snapshot.docs
         for( const doc of docs ){
-          state.rooms.push(doc.data())          
+          const room = {
+            id: doc.id,
+            ...doc.data()
+          }
+          state.rooms.push(room)
         }
       })
     return {

@@ -28,18 +28,23 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, SetupContext, toRefs } from "@vue/composition-api"
 import firebase from 'firebase'
+// plugins
 import useFirebase from '@/plugins/firebase'
+// types
+import { IChat, IRoomData, IRoomState } from '@/types/room'
+
 export default defineComponent({
   setup(_, ctx){
     // localstate
-    const state = reactive({
+    const state = reactive<IRoomState>({
       roomData: null
     })    
     // useFirebase
     const { createChat } = useFirebase()
-    function sendBtn() {
-      console.log(state.roomData.id)
-      createChat(state.roomData.id)
+    function sendBtn() { // post chat
+      if( state.roomData ){
+        createChat(state.roomData.id)
+      }      
     }    
     // onMounted
     onMounted(() => {    
@@ -48,10 +53,10 @@ export default defineComponent({
       chatRoomRef.get()
         .then((docSnapshot) => {
           if( docSnapshot.exists ){
-            chatRoomRef.onSnapshot(( doc ) => { // doc => room            
+            chatRoomRef.onSnapshot(( doc ) => { // doc => room                          
               state.roomData = {
                 id: doc.id,
-                ...doc.data(),                
+                ...doc.data(),
                 chats: []
               }              
             })
@@ -59,10 +64,12 @@ export default defineComponent({
           chatRoomRef.collection("chats")
             .onSnapshot((snapshot) => {
               const docs = snapshot.docs
-              state.roomData.chats = []
-              for( const doc of docs ){
-                state.roomData.chats.push(doc.data())
-              }
+              if( state.roomData ){
+                state.roomData.chats = []
+                for( const doc of docs ){
+                  state.roomData.chats.push(doc.data() as IChat)
+                }                
+              }              
             })
         })      
     })
