@@ -20,6 +20,11 @@ interface IUser {
 interface IFireBaseState {
   user: IUser | null
 }
+type RoomParams = {
+  name: string,
+  description: string,
+  genre: string
+}
 const state = reactive<IFireBaseState>({
   user: null,
 })
@@ -32,22 +37,42 @@ export default function useFirebase(){
     state.user = user  
   }
   // Actions   
-  function createRoom(room: any){
+  function createRoom(roomParams: RoomParams){
     if ( state.user ){
-      firebase.firestore().collection('chatRooms').doc().set({
+      firebase.firestore().collection('chatRooms').doc().set({        
+        title: roomParams.name,        
+        description: roomParams.description,
+        genre: roomParams.genre,
         owner_id: state.user.id, 
-        created_at: new Date(), 
-        room_name: room.roomName,
-        description: room.description,
-        genre: room.genre,
+        created_at: new Date(),                       
         // + should add subcollection +
-      }).then( res => {
-        console.log(res)
+      }).catch(( err ) => {
+        alert(err)
       })
     } else {
       alert('To create new room, Please Sign in')
     }
   }
+  function createChat(roomId: string){
+    if ( state.user ){
+      firebase.firestore().collection('chatRooms').doc(roomId)
+        .collection("chats").add({
+          poster: "yasunarle",
+          text: "hello"
+        }).then( res => {
+          console.log(res)
+        })
+    } else {
+      alert('To chat in a room, Please Sign in')
+    }    
+  }
+  // function subscribeChats (roomId: string){
+  //   firebase.firestore().collection("chatRooms")
+  //     .doc(roomId).collection("chats")
+  //       .onSnapshot(( snapshot ) => {
+  //         console.log(snapshot)
+  //       })?
+  // }
   // init Auth state
   onMounted(() => {
     firebase.auth().onAuthStateChanged(user => {      
@@ -72,7 +97,8 @@ export default function useFirebase(){
   })
   return {
     getUser,
-    createRoom
+    createRoom,
+    createChat
   }
 }
 

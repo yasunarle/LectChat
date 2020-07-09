@@ -2,12 +2,15 @@
   <div class="header">
     <div class="logo">
       <div class="app-logo">LECT</div>
-    </div>    
-    <div v-if="getUser">
-      <button @click="logOut">Log out</button>
-    </div>  
-    <div v-else>
-      <button @click="logIn">Login</button>
+    </div>
+    <div class="right">
+      <router-link to="/compositionapi">Go to URI</router-link>
+      <div v-if="getUser">
+        <button @click="logOut">Log out</button>
+      </div>  
+      <div v-else>
+        <button @click="logIn">Login</button>
+      </div>    
     </div>      
   </div>
 </template>

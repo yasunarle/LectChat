@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@vue/composition-api": "^0.6.6",
+    "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "firebase": "^7.15.4",
+    "lodash": "^4.17.15",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0"
   },

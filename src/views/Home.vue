@@ -1,10 +1,8 @@
 <template>
-  <div class="home">  
-    <h1>This App is made by comopsition API</h1>
-    <p>test of composition API</p>
-    <router-link to="/compositionapi">Go to URI</router-link>
-    <h1>RoomCreater</h1> 
+  <div class="home">
+    <img src="@/assets/conversation.png" alt="">
     <RoomCreater/>
+    <RoomsShow/>
   </div>
 </template>
 
@@ -12,12 +10,24 @@
 import { defineComponent } from '@vue/composition-api'
 // compornents
 import RoomCreater from '@/components/common/RoomCreater.vue'
+import RoomsShow from '@/components/common/RoomsShow.vue'
+
 export default defineComponent({  
   components: {
-    RoomCreater
+    RoomCreater,
+    RoomsShow
   },
   setup(){
 
   }
 })
 </script>
+
+<style lang="scss">
+.home{
+  padding: 10px;
+  img{
+    height: 200px;
+  }
+}  
+</style>
