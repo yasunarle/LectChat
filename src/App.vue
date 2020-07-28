@@ -1,41 +1,40 @@
 <template>
-  <div id="app">    
-    <TheHeader/>
+  <div id="app">
+    <TheHeader />
     <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-// components
+// Components
 import TheHeader from '@/components/common/TheHeader.vue'
 
 export default defineComponent({
-  components:{
+  components: {
     TheHeader
   },
-  setup(){}
+  setup() {}
 })
 </script>
 
 <style lang="scss">
-body{
+body {
   padding: 0px;
   margin: 0px;
-  *{
+  * {
     padding: 0px;
-    margin: 0px;    
+    margin: 0px;
   }
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;  
+  -moz-osx-font-smoothing: grayscale;
   // color: #2c3e50;
-  color: #6E68FD;
-
+  color: #6e68fd;
 }
-.app-logo{
+.app-logo {
   font-size: 30px;
   font-weight: bold;
 }

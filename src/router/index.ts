@@ -1,17 +1,17 @@
-import Vue from 'vue';
-import VueRouter, { RouteConfig } from 'vue-router';
-import Compositionapi from '../views/Composition-api.vue';
+import Vue from 'vue'
+import VueRouter, { RouteConfig } from 'vue-router'
+import Compositionapi from '../views/Composition-api.vue'
 // views
-import Home from '../views/Home.vue';
-import ChatRoom from '../views/ChatRoom.vue';
+import Home from '../views/Home.vue'
+import Room from '../views/Room.vue'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const routes: RouteConfig[] = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: Home
   },
   {
     path: '/compositionapi',
@@ -21,14 +21,14 @@ const routes: RouteConfig[] = [
   {
     path: '/room/:id',
     name: 'room',
-    component: ChatRoom
+    component: Room
   }
-];
+]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes,
-});
+  routes
+})
 
-export default router;
+export default router

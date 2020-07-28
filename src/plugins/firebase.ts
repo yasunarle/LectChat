@@ -8,100 +8,106 @@ const config: any = {
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
   storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID
 }
 firebase.initializeApp(config)
 
 interface IUser {
-  id: string,
-  name: string,
-  photoURL: string 
+  id: string
+  name: string
+  photoURL: string
 }
 interface IFireBaseState {
   user: IUser | null
 }
 type RoomParams = {
-  name: string,
-  description: string,
+  name: string
+  description: string
   genre: string
 }
 const state = reactive<IFireBaseState>({
-  user: null,
+  user: null
 })
 
-export default function useFirebase(){
+export default function useFirebase() {
   // Getters
-  const getUser = computed(() => state.user )
+  const getUser = computed(() => state.user)
   // Mutations
-  function userUpdate(user: IUser | null){
-    state.user = user  
+  function userUpdate(user: IUser | null) {
+    state.user = user
   }
-  // Actions   
-  function createRoom(roomParams: RoomParams){
-    if ( state.user ){
-      firebase.firestore().collection('chatRooms').doc().set({        
-        title: roomParams.name,        
-        description: roomParams.description,
-        genre: roomParams.genre,
-        owner_id: state.user.id, 
-        created_at: new Date(),                       
-        // + should add subcollection +
-      }).catch(( err ) => {
-        alert(err)
-      })
+  // Actions 非同期
+  function createRoom(roomParams: RoomParams) {
+    if (state.user) {
+      firebase
+        .firestore()
+        .collection('rooms')
+        .doc()
+        .set({
+          title: roomParams.name,
+          description: roomParams.description,
+          genre: roomParams.genre,
+          owner_id: state.user.id,
+          owner_name: state.user.name,
+          created_at: firebase.firestore.FieldValue.serverTimestamp()
+          // + should add subcollection +
+        })
+        .catch(err => {
+          alert(err.message)
+        })
     } else {
       alert('To create new room, Please Sign in')
     }
   }
-  function createChat(roomId: string){
-    if ( state.user ){
-      firebase.firestore().collection('chatRooms').doc(roomId)
-        .collection("chats").add({
-          poster: "yasunarle",
-          text: "hello"
-        }).then( res => {
+  function postTranScript(roomId: string, content: string) {
+    if (state.user) {
+      firebase
+        .firestore()
+        .collection('rooms')
+        .doc(roomId)
+        .collection('transcripts')
+        .add({
+          poster_id: state.user.id,
+          poster_name: state.user.name,
+          created_at: firebase.firestore.FieldValue.serverTimestamp(),
+          // Params
+          content: content
+        })
+        .then(res => {
           console.log(res)
         })
     } else {
       alert('To chat in a room, Please Sign in')
-    }    
+    }
   }
-  // function subscribeChats (roomId: string){
-  //   firebase.firestore().collection("chatRooms")
-  //     .doc(roomId).collection("chats")
-  //       .onSnapshot(( snapshot ) => {
-  //         console.log(snapshot)
-  //       })?
-  // }
   // init Auth state
   onMounted(() => {
-    firebase.auth().onAuthStateChanged(user => {      
-      if( user ){
-        const userRef = firebase.firestore().collection('users').doc(user.uid)
-        userRef.get().then( doc => {
-          if( doc.exists ){            
-            const userObj = {...doc.data()} as IUser
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const userRef = firebase
+          .firestore()
+          .collection('users')
+          .doc(user.uid)
+        userRef.get().then(doc => {
+          if (doc.exists) {
+            const userObj = { ...doc.data() } as IUser
             userUpdate(userObj)
           } else {
             userRef.set({
               id: user.uid,
               name: user.displayName,
-              photoURL: user.photoURL              
+              photoURL: user.photoURL
             })
           }
         })
       } else {
         userUpdate(null)
-      }      
-    });
+      }
+    })
   })
   return {
     getUser,
     createRoom,
-    createChat
+    postTranScript
   }
 }
-
-
-
-
