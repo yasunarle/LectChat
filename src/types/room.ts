@@ -1,3 +1,9 @@
+export enum Genre {
+  STUDY,
+  PORITICS,
+  SPORTS,
+  OTHER
+}
 export interface ITranScript {
   content: string
   poster_id: string
