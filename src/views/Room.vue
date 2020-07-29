@@ -1,21 +1,31 @@
 <template>
   <div class="room">
     <div v-if="state.roomData" class="room__content">
+      <!--  -->
       <div class="room__header">
         <h1>タイトル: {{ state.roomData.title }}</h1>
         <h2>説明文: {{ state.roomData.description }}</h2>
         <h3>ジャンル: {{ state.roomData.genre }}</h3>
         <h3>オーナー: {{ state.roomData.owner_name }}</h3>
       </div>
-
-      <input type="text" v-model="state.inputText" />
-      <button @click="postBtn">送信</button>
-
+      <!--  -->
+      <div class="room__postForm">
+        <!-- @keyup.enter="handlePost" -->
+        <textarea type="text" v-model="state.inputText" placeholder="公開コメントを入力..." />
+        <button @click="handlePost">送信</button>
+      </div>
+      <!--  -->
       <div class="transcripts">
         <template v-for="(transcript, index) in state.roomData.transcripts">
-          <AppTranScript :content="transcript.content" :created_at="transcript.created_at" />
+          <AppTranScript
+            :content="transcript.content"
+            :poster_id="transcript.poster_id"
+            :poster_name="transcript.poster_name"
+            :created_at="transcript.created_at"
+          />
         </template>
       </div>
+      <!--  -->
     </div>
     <div v-else>
       <h1>そんなルームないよ</h1>
@@ -49,9 +59,10 @@ export default defineComponent({
     })
     // useFirebase
     const { postTranScript } = useFirebase()
-    function postBtn() {
+    function handlePost() {
       // post Message in the room
       postTranScript(state.roomData.id, state.inputText)
+      state.inputText = ''
     }
     // onMounted
     onMounted(() => {
@@ -68,22 +79,25 @@ export default defineComponent({
             ...docSnapshot.data(),
             transcripts: []
           } // as IRoomData
-          roomRef.collection('transcripts').onSnapshot(tsSnapshot => {
-            const docs = tsSnapshot.docs
-            if (state.roomData) {
-              state.roomData.transcripts = []
-              for (const doc of docs) {
-                state.roomData.transcripts.push(doc.data() as ITranScript)
+          roomRef
+            .collection('transcripts')
+            .orderBy('created_at', 'desc')
+            .onSnapshot(tsSnapshot => {
+              const docs = tsSnapshot.docs
+              if (state.roomData) {
+                state.roomData.transcripts = []
+                for (const doc of docs) {
+                  state.roomData.transcripts.push(doc.data() as ITranScript)
+                }
               }
-            }
-          })
+            })
         }
       })
     })
 
     return {
       state,
-      postBtn
+      handlePost
     }
   }
 })
@@ -91,15 +105,34 @@ export default defineComponent({
 
 <style lang="scss">
 .room {
-  padding: 10px;
+  width: 100%;
+  min-height: 600px;
+  background: #f6f6f6;
   .room__content {
+    max-width: 900px;
+    margin: 0px auto;
     padding: 10px;
-    border: 1px solid black;
-  }
-  .chats {
-    min-height: 500px;
-    padding: 20px;
-    border: 1px solid black;
+    .room__postForm {
+      max-width: 400px;
+      margin: 0 auto;
+      height: 100px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      border-top: 1px solid #cccccc;
+      border-bottom: 1px solid #cccccc;
+      textarea {
+        height: 1000px;
+        padding: 10px;
+        background: #f6f6f6;
+        border-bottom: 1px solid #cccccc;
+      }
+      button {
+        margin-top: 20px;
+        color: #4fc08d;
+      }
+    }
   }
 }
 </style>
