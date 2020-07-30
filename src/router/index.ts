@@ -4,6 +4,7 @@ import Compositionapi from '../views/Composition-api.vue'
 // views
 import Home from '../views/Home.vue'
 import Room from '../views/Room.vue'
+import User from '../views/User.vue'
 
 Vue.use(VueRouter)
 
@@ -19,9 +20,14 @@ const routes: RouteConfig[] = [
     component: Compositionapi
   },
   {
-    path: '/room/:id',
+    path: '/r/:id',
     name: 'room',
     component: Room
+  },
+  {
+    path: '/u/:id',
+    name: 'user',
+    component: User
   }
 ]
 
