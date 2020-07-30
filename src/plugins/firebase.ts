@@ -1,5 +1,7 @@
 import firebase from 'firebase'
 import { reactive, onMounted, computed } from '@vue/composition-api'
+// Types
+import { IUser } from 'src/types/user'
 
 const config: any = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -12,11 +14,7 @@ const config: any = {
 }
 firebase.initializeApp(config)
 
-interface IUser {
-  id: string
-  name: string
-  photoURL: string
-}
+// Local Types
 interface IFireBaseState {
   user: IUser | null
 }
@@ -25,18 +23,27 @@ type RoomParams = {
   description: string
   genre: string
 }
+
+// Local State
 const state = reactive<IFireBaseState>({
   user: null
 })
 
 export default function useFirebase() {
+  //
   // Getters
+  //
   const getUser = computed(() => state.user)
+  //
   // Mutations
+  //
   function userUpdate(user: IUser | null) {
     state.user = user
   }
+  //
   // Actions 非同期
+  // - Room 関係
+  //
   function createRoom(roomParams: RoomParams) {
     if (state.user) {
       firebase
@@ -49,7 +56,8 @@ export default function useFirebase() {
           genre: roomParams.genre,
           owner_id: state.user.id,
           owner_name: state.user.name,
-          created_at: firebase.firestore.FieldValue.serverTimestamp()
+          created_at: firebase.firestore.FieldValue.serverTimestamp(),
+          joined_users: []
           // + should add subcollection +
         })
         .catch(err => {
@@ -57,6 +65,51 @@ export default function useFirebase() {
         })
     } else {
       alert('To create new room, Please Sign in')
+    }
+  }
+  function joinRoom(roomId: string) {
+    if (state.user) {
+      state.user.joined_rooms.push(roomId)
+      firebase
+        .firestore()
+        .collection('rooms')
+        .doc(roomId)
+        .update({
+          joined_users: firebase.firestore.FieldValue.arrayUnion(state.user.id)
+        })
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(state.user.id)
+        .update({
+          joined_rooms: firebase.firestore.FieldValue.arrayUnion(roomId)
+        })
+    } else {
+      alert('ログインしてね')
+    }
+  }
+  function leaveRoom(roomId: string) {
+    if (state.user) {
+      const index = state.user.joined_rooms.indexOf(roomId)
+      state.user.joined_rooms.splice(index, 1)
+
+      firebase
+        .firestore()
+        .collection('rooms')
+        .doc(roomId)
+        .update({
+          joined_users: firebase.firestore.FieldValue.arrayRemove(state.user.id)
+        })
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(state.user.id)
+        .update({
+          joined_rooms: firebase.firestore.FieldValue.arrayRemove(roomId)
+        })
+      state.user.joined_rooms
+    } else {
+      alert('ログインしてね')
     }
   }
   function postTranScript(roomId: string, content: string) {
@@ -96,7 +149,9 @@ export default function useFirebase() {
             userRef.set({
               id: user.uid,
               name: user.displayName,
-              photoURL: user.photoURL
+              photoURL: user.photoURL,
+              created_rooms: [],
+              joined_rooms: []
             })
           }
         })
@@ -108,6 +163,8 @@ export default function useFirebase() {
   return {
     getUser,
     createRoom,
-    postTranScript
+    joinRoom,
+    postTranScript,
+    leaveRoom
   }
 }

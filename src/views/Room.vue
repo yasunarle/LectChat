@@ -7,6 +7,13 @@
         <h2>説明文: {{ state.roomData.description }}</h2>
         <h3>ジャンル: {{ state.roomData.genre }}</h3>
         <h3>オーナー: {{ state.roomData.owner_name }}</h3>
+
+        <div v-if="isJoinedRoom">
+          <button @click="handleLeaveRoom">Leave</button>
+        </div>
+        <div v-else>
+          <button @click="handleJoinRoom">参加</button>
+        </div>
       </div>
       <!--  -->
       <div class="room__postForm">
@@ -52,19 +59,46 @@ export default defineComponent({
     AppTranScript
   },
   setup(_, ctx) {
+    //
     // localstate
+    //
     const state = reactive<IRoomState>({
       roomData: null,
       inputText: ''
     })
+    //
     // useFirebase
-    const { postTranScript } = useFirebase()
+    //
+    const { postTranScript, joinRoom, leaveRoom, getUser } = useFirebase()
+    const isJoinedRoom = computed(() => {
+      if (state.roomData) {
+        if (getUser.value) {
+          return getUser.value.joined_rooms.indexOf(state.roomData.id) >= 0
+            ? true
+            : false
+        }
+      }
+    })
+
     function handlePost() {
-      // post Message in the room
-      postTranScript(state.roomData.id, state.inputText)
-      state.inputText = ''
+      if (state.roomData) {
+        postTranScript(state.roomData.id, state.inputText)
+        state.inputText = ''
+      }
     }
+    function handleJoinRoom() {
+      if (state.roomData) {
+        joinRoom(state.roomData.id)
+      }
+    }
+    function handleLeaveRoom() {
+      if (state.roomData) {
+        leaveRoom(state.roomData.id)
+      }
+    }
+    //
     // onMounted
+    //
     onMounted(() => {
       const roomId = ctx.root.$route.params.id
       const roomRef = firebase
@@ -97,7 +131,10 @@ export default defineComponent({
 
     return {
       state,
-      handlePost
+      handlePost,
+      isJoinedRoom,
+      handleJoinRoom,
+      handleLeaveRoom
     }
   }
 })
