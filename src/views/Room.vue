@@ -79,7 +79,6 @@ export default defineComponent({
         }
       }
     })
-
     function handlePost() {
       if (state.roomData) {
         postTranScript(state.roomData.id, state.inputText)

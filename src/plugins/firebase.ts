@@ -56,6 +56,7 @@ export default function useFirebase() {
           genre: roomParams.genre,
           owner_id: state.user.id,
           owner_name: state.user.name,
+          community_id: '',
           created_at: firebase.firestore.FieldValue.serverTimestamp(),
           joined_users: []
           // + should add subcollection +
@@ -92,7 +93,6 @@ export default function useFirebase() {
     if (state.user) {
       const index = state.user.joined_rooms.indexOf(roomId)
       state.user.joined_rooms.splice(index, 1)
-
       firebase
         .firestore()
         .collection('rooms')
@@ -133,7 +133,9 @@ export default function useFirebase() {
       alert('To chat in a room, Please Sign in')
     }
   }
-  // init Auth state
+  //
+  // ローディング時
+  //
   onMounted(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
