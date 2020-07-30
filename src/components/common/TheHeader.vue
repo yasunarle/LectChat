@@ -5,6 +5,10 @@
         <router-link to="/">Lect</router-link>
       </div>
     </div>
+    <div class="header__search">
+      <input type="text" class="search-input" />
+      <button>検索</button>
+    </div>
     <div class="header__right">
       <template v-if="getUser">
         <div class="header__navContainer">
@@ -60,8 +64,11 @@ export default defineComponent({
   .header__logo {
     margin: 20px;
   }
-  .header__right {
+  .header__search {
+    width: 100%;
     flex: 1;
+  }
+  .header__right {
     .header__navContainer {
       cursor: pointer;
       a {
