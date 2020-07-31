@@ -12,7 +12,7 @@
     <div class="header__right">
       <template v-if="getUser">
         <div class="header__navContainer">
-          <a @click="logOut" href="#">Log out</a>
+          <router-link :to="{  name: 'user', params: { id: getUser.id } }">{{ getUser.name }}</router-link>
         </div>
       </template>
       <template v-else>
