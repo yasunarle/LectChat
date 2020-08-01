@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 import { reactive, onMounted, computed } from '@vue/composition-api'
 // Types
-import { IUser } from 'src/types/user'
+import { IUser } from '@/types/user'
 
 const config: any = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -15,25 +15,30 @@ const config: any = {
 firebase.initializeApp(config)
 
 // Local Types
-interface IFireBaseState {
+interface IAuthState {
   user: IUser | null
+  isProcessing: boolean
 }
-type RoomParams = {
+interface RoomParams {
   name: string
   description: string
   genre: string
 }
 
 // Local State
-const state = reactive<IFireBaseState>({
-  user: null
+const state = reactive<IAuthState>({
+  user: null,
+  isProcessing: false
 })
+//
+export const db = firebase.firestore()
 
 export default function useFirebase() {
   //
   // Getters
   //
   const getUser = computed(() => state.user)
+  const getIsProcessing = computed(() => state.isProcessing)
   //
   // Mutations
   //
@@ -46,9 +51,7 @@ export default function useFirebase() {
   //
   function createRoom(roomParams: RoomParams) {
     if (state.user) {
-      firebase
-        .firestore()
-        .collection('rooms')
+      db.collection('rooms')
         .doc()
         .set({
           title: roomParams.name,
@@ -71,16 +74,12 @@ export default function useFirebase() {
   function joinRoom(roomId: string) {
     if (state.user) {
       state.user.joined_rooms.push(roomId)
-      firebase
-        .firestore()
-        .collection('rooms')
+      db.collection('rooms')
         .doc(roomId)
         .update({
           joined_users: firebase.firestore.FieldValue.arrayUnion(state.user.id)
         })
-      firebase
-        .firestore()
-        .collection('users')
+      db.collection('users')
         .doc(state.user.id)
         .update({
           joined_rooms: firebase.firestore.FieldValue.arrayUnion(roomId)
@@ -93,16 +92,12 @@ export default function useFirebase() {
     if (state.user) {
       const index = state.user.joined_rooms.indexOf(roomId)
       state.user.joined_rooms.splice(index, 1)
-      firebase
-        .firestore()
-        .collection('rooms')
+      db.collection('rooms')
         .doc(roomId)
         .update({
           joined_users: firebase.firestore.FieldValue.arrayRemove(state.user.id)
         })
-      firebase
-        .firestore()
-        .collection('users')
+      db.collection('users')
         .doc(state.user.id)
         .update({
           joined_rooms: firebase.firestore.FieldValue.arrayRemove(roomId)
@@ -114,9 +109,7 @@ export default function useFirebase() {
   }
   function postTranScript(roomId: string, content: string) {
     if (state.user) {
-      firebase
-        .firestore()
-        .collection('rooms')
+      db.collection('rooms')
         .doc(roomId)
         .collection('transcripts')
         .add({
@@ -126,39 +119,44 @@ export default function useFirebase() {
           // Params
           content: content
         })
-        .then(res => {
-          console.log(res)
+        .catch(err => {
+          alert(err.message)
         })
     } else {
       alert('To chat in a room, Please Sign in')
     }
   }
+
   //
   // ローディング時
   //
   onMounted(() => {
+    state.isProcessing = true
     firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const userRef = firebase
-          .firestore()
-          .collection('users')
-          .doc(user.uid)
-        userRef.get().then(doc => {
-          if (doc.exists) {
-            const userObj = { ...doc.data() } as IUser
-            userUpdate(userObj)
-          } else {
-            userRef.set({
-              id: user.uid,
-              name: user.displayName,
-              photoURL: user.photoURL,
-              created_rooms: [],
-              joined_rooms: []
-            })
-          }
-        })
-      } else {
-        userUpdate(null)
+      try {
+        if (user) {
+          const userRef = db.collection('users').doc(user.uid)
+          userRef.get().then(doc => {
+            if (doc.exists) {
+              const userObj = { ...doc.data() } as IUser
+              userUpdate(userObj)
+            } else {
+              const userObj = {
+                id: user.uid,
+                name: user.displayName,
+                photoURL: user.photoURL,
+                created_rooms: [],
+                joined_rooms: []
+              } as IUser
+              userRef.set(userObj)
+              userUpdate(userObj)
+            }
+          })
+        } else {
+          userUpdate(null)
+        }
+      } finally {
+        state.isProcessing = false
       }
     })
   })
@@ -167,6 +165,7 @@ export default function useFirebase() {
     createRoom,
     joinRoom,
     postTranScript,
-    leaveRoom
+    leaveRoom,
+    getIsProcessing
   }
 }

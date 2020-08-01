@@ -27,7 +27,7 @@ export interface IRoomData {
   transcripts?: ITranScript[]
 }
 
-export interface IRoomState {
+export interface IRoomPageState {
   roomData: IRoomData | null
   inputText: string
 }

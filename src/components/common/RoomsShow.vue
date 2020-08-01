@@ -3,7 +3,7 @@
     <h2>ルーム一覧</h2>
     <div v-for="(room, index) in state.rooms" :key="index">
       <h2>
-        <router-link :to="{ name: 'room', params: { id: room.id }}">{{ room.title }}</router-link>
+        <router-link :to="{ name: 'Room', params: { id: room.id }}">{{ room.title }}</router-link>
       </h2>
     </div>
   </div>

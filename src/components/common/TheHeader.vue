@@ -7,17 +7,23 @@
     </div>
     <div class="header__search">
       <input type="text" class="search-input" />
-      <button>検索</button>
+      <button>search</button>
     </div>
     <div class="header__right">
       <template v-if="getUser">
         <div class="header__navContainer">
-          <router-link :to="{  name: 'user', params: { id: getUser.id } }">{{ getUser.name }}</router-link>
+          <router-link :to="{  name: 'User', params: { id: getUser.id } }">{{ getUser.name }}</router-link>
+        </div>
+        <div class="header__navContainer">
+          <router-link to="/settings">settings</router-link>
+        </div>
+        <div class="header__navContainer">
+          <a @click="logOut">Log out</a>
         </div>
       </template>
       <template v-else>
         <div class="header__navContainer">
-          <a @click="logIn" href="#">Login</a>
+          <a @click="logIn">Login</a>
         </div>
       </template>
     </div>
@@ -32,6 +38,8 @@ import userStore from '@/store/index'
 import useFirebase from '@/plugins/firebase'
 // components
 // import AppButton from '@/components/common/AppButton.vue'
+// Router
+import router from '@/router'
 
 export default defineComponent({
   components: {
@@ -40,11 +48,13 @@ export default defineComponent({
   setup() {
     const { getUser } = useFirebase()
     function logIn() {
+      console.log('te')
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
     }
     function logOut() {
       firebase.auth().signOut()
+      router.push('/')
     }
     return {
       getUser,

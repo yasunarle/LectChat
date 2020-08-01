@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 // Plugins
-import '@/plugins/firebase'
 import '@/plugins/composition-api'
+import '@/plugins/firebase'
 
 Vue.config.productionTip = false
 

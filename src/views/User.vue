@@ -28,26 +28,29 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import firebase, { firestore } from 'firebase'
 // Plugins
-import useFirebase from '@/plugins/firebase'
+import useFirebase, { db } from '@/plugins/firebase'
+// Types
+import { IUserPageState, IUser } from '@/types/user'
 
 export default defineComponent({
   setup(_, ctx) {
     //
     // created
     //
-    const state = reactive({
+    const state = reactive<IUserPageState>({
       pageUser: null
     })
-    const userRef = firebase
-      .firestore()
-      .collection('users')
-      .doc(ctx.root.$route.params.id)
+    //
+    // firebase
+    //
+    const userRef = db.collection('users').doc(ctx.root.$route.params.id)
     userRef.get().then(snapshot => {
       if (snapshot.exists) {
-        state.pageUser = {
+        const pageUserObj = {
           id: snapshot.id,
           ...snapshot.data()
-        }
+        } as IUser
+        state.pageUser = pageUserObj
       }
     })
     //

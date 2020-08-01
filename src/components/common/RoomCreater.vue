@@ -4,7 +4,7 @@
     <input type="text" placeholder="Room Name" v-model="state.room.name" />
     <input type="text" placeholder="description" v-model="state.room.description" />
     <input type="text" placeholder="genre" v-model="state.room.genre" />
-    <button @click="validation">Create</button>
+    <button @click="handleCreateRoom">Create</button>
   </div>
 </template>
 <script>
@@ -22,8 +22,13 @@ export default defineComponent({
         genre: ''
       }
     })
-    function validation() {
-      if (state.room.name && state.room.description && state.room.genre) {
+    function isValitedRoom() {
+      return state.room.name && state.room.description && state.room.genre
+        ? true
+        : false
+    }
+    function handleCreateRoom() {
+      if (isValitedRoom()) {
         const roomPram = {
           ...state.room
         }
@@ -35,7 +40,7 @@ export default defineComponent({
     // return
     return {
       state,
-      validation
+      handleCreateRoom
     }
   }
 })

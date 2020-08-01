@@ -50,7 +50,7 @@ import firebase from 'firebase'
 // Plugins
 import useFirebase from '@/plugins/firebase'
 // Types
-import { ITranScript, IRoomData, IRoomState } from '@/types/room'
+import { ITranScript, IRoomData, IRoomPageState } from '@/types/room'
 // Components
 import AppTranScript from '@/components/common/AppTranScript.vue'
 
@@ -62,7 +62,7 @@ export default defineComponent({
     //
     // localstate
     //
-    const state = reactive<IRoomState>({
+    const state = reactive<IRoomPageState>({
       roomData: null,
       inputText: ''
     })
