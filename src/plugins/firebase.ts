@@ -23,6 +23,7 @@ interface RoomParams {
   name: string
   description: string
   genre: string
+  hashtagList: string[]
 }
 
 // Local State
@@ -57,6 +58,7 @@ export default function useFirebase() {
           title: roomParams.name,
           description: roomParams.description,
           genre: roomParams.genre,
+          hashtags: roomParams.hashtagList,
           owner_id: state.user.id,
           owner_name: state.user.name,
           community_id: '',

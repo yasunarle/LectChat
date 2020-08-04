@@ -6,8 +6,8 @@
       </div>
     </div>
     <div class="header__search">
-      <input type="text" class="search-input" />
-      <button>search</button>
+      <input type="text" class="search-input" v-model="state.searchContent" />
+      <button @click="handleSearch">search</button>
     </div>
     <div class="header__right">
       <template v-if="getUser">
@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import firebase from 'firebase'
 // store
 import userStore from '@/store/index'
@@ -46,9 +46,26 @@ export default defineComponent({
     // AppButton
   },
   setup() {
+    // LocalState
+    const state = reactive({
+      searchContent: ''
+    })
+
+    function handleSearch() {
+      if (state.searchContent != '') {
+        router
+          .push({
+            name: 'Results',
+            params: { search_query: state.searchContent }
+          })
+          .catch(err => {
+            console.log(err.message)
+          })
+      }
+    }
+    // firebase
     const { getUser } = useFirebase()
     function logIn() {
-      console.log('te')
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
     }
@@ -57,6 +74,8 @@ export default defineComponent({
       router.push('/')
     }
     return {
+      state,
+      handleSearch,
       getUser,
       logIn,
       logOut

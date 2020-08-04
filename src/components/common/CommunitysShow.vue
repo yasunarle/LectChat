@@ -1,5 +1,5 @@
 <template>
-  <div type="community__show">
+  <div type="communitysShow">
     <h1>コミュニティ 一覧</h1>
   </div>
 </template>

@@ -25,6 +25,7 @@ export interface IRoomData {
   community_id: string
   joined_users: UserId[]
   transcripts?: ITranScript[]
+  hashtags?: string[]
 }
 
 export interface IRoomPageState {

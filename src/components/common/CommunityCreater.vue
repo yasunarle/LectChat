@@ -1,5 +1,5 @@
 <template>
-  <div type="community__creater">
+  <div type="communityCreater">
     <h1>コミュニティ作成</h1>
   </div>
 </template>
@@ -10,4 +10,9 @@ export default defineComponent({
   setup() {}
 })
 </script>
+<style lang="scss">
+// .communityCreater {
+
+// }
+</style>
 
