@@ -52,6 +52,17 @@ export default function useFirebase() {
   }
   //
   // Actions 非同期
+  // User Settings 関係
+  //
+  function updatePhotoURL(url: string) {
+    if (state.user) {
+      usersRef.doc(state.user.id).update({
+        photoURL: url
+      })
+    }
+  }
+
+  //
   // - Room 関係
   //
   function createRoom(roomParams: RoomParams) {
@@ -164,6 +175,7 @@ export default function useFirebase() {
     joinRoom,
     postTranScript,
     leaveRoom,
-    getIsProcessing
+    getIsProcessing,
+    updatePhotoURL
   }
 }
