@@ -7,14 +7,22 @@
       </div>
       <div v-else>
         <div v-if="getUser">
-          <h3>id: {{ getUser.id }}</h3>
           <h3>ユーザネーム:</h3>
           <input type="text" v-model="getUser.name" />
           <h3>ひとこと:</h3>
           <input type="text" v-model="getUser.description" />
           <h2>images</h2>
           <div class="settings__avatar">
-            <img :src="getUser.photoURL" alt="" width="100%" />
+            <template v-if="!getUser.photoURL == ''">
+              <img :src="getUser.photoURL" alt="avatar image" width="100%" />
+            </template>
+            <template v-else>
+              <img
+                src="../assets/no-avatar.png"
+                alt="avatar image"
+                height="100%"
+              />
+            </template>
             <input
               type="file"
               style="display: none"
@@ -99,6 +107,7 @@ export default defineComponent({
     .settings__avatar {
       width: 100px;
       height: 100px;
+      // background-image: url('../assets/no-avatar.png');
       position: relative;
       border: 1px solid black;
       border-radius: 20px;

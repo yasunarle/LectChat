@@ -1,9 +1,11 @@
 <template>
   <div class="rooms-show">
-    <h2>新着チャットルーム</h2>
+    <h2>新着チャットルーム: 30</h2>
     <div v-for="(room, index) in state.rooms" :key="index">
       <h2>
-        <router-link :to="{ name: 'Room', params: { id: room.id }}">{{ room.title }}</router-link>
+        <router-link :to="{ name: 'Room', params: { id: room.id } }">{{
+          room.title
+        }}</router-link>
       </h2>
     </div>
   </div>
@@ -21,16 +23,19 @@ export default defineComponent({
       rooms: []
     })
     // created
-    roomsRef.get().then(snapshot => {
-      const docs = snapshot.docs
-      for (const doc of docs) {
-        const room = {
-          id: doc.id,
-          ...doc.data()
+    roomsRef
+      .limit(10)
+      .get()
+      .then(snapshot => {
+        const docs = snapshot.docs
+        for (const doc of docs) {
+          const room = {
+            id: doc.id,
+            ...doc.data()
+          }
+          state.rooms.push(room)
         }
-        state.rooms.push(room)
-      }
-    })
+      })
     return {
       state
     }
