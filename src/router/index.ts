@@ -16,11 +16,11 @@ const routes: RouteConfig[] = [
     name: 'Home',
     component: Home
   },
-  {
-    path: '/*',
-    name: 'Home',
-    component: Home
-  },
+  // {
+  //   path: '/*',
+  //   name: 'Home',
+  //   component: Home
+  // },
   {
     path: '/results',
     name: 'Results',

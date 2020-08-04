@@ -33,6 +33,7 @@ const state = reactive<IAuthState>({
 })
 // firestore
 export const db = firebase.firestore()
+export const storage = firebase.storage()
 export const usersRef = db.collection('users')
 export const roomsRef = db.collection('rooms')
 export const communitysRef = db.collection('communitys')

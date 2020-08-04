@@ -40,11 +40,16 @@ body {
     color: #4fc08d;
   }
 }
+.app__btn {
+  background-color: #2ea6ff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   color: #4f5959;
 }
 .app-logo {

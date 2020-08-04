@@ -2,6 +2,10 @@
   <div class="room-creater">
     <h1>RoomCreater</h1>
     <p>{{ hashtagList }}</p>
+    <div v-if="state.imageData">
+      <img :src="state.previewUrl" alt="Avater image" width="100px" />
+    </div>
+    <input type="file" @change="upload" accept="image/*" />
     <input type="text" placeholder="Room Name" v-model="state.room.name" />
     <input type="text" placeholder="description" v-model="state.room.description" />
     <input type="text" placeholder="genre" v-model="state.room.genre" />
@@ -10,7 +14,7 @@
       <input type="text" placeholder="#アニメ　#ワンピース" v-model="state.room.hashtags" />
     </div>
 
-    <button @click="handleCreateRoom">Create</button>
+    <button @click="handleCreateRoom" class="app__btn">Create</button>
   </div>
 </template>
 <script>
@@ -20,7 +24,8 @@ import {
   toRefs,
   computed
 } from '@vue/composition-api'
-import useFirebase from '@/plugins/firebase'
+import useFirebase, { storage } from '@/plugins/firebase'
+
 export default defineComponent({
   setup() {
     // useFirebase
@@ -32,8 +37,19 @@ export default defineComponent({
         description: '',
         genre: '',
         hashtags: ''
-      }
+      },
+      imageData: null,
+      previewUrl: ''
     })
+    function upload(event) {
+      const file = event.target.files[0]
+      state.previewUrl = URL.createObjectURL(file)
+      state.imageData = event.target.files[0]
+      // const storageRef = storage.ref('images/' + file.name)
+      // storageRef.put(file).then(() => {
+      //   console.log('uploaded file')
+      // })
+    }
     const hashtagList = computed(() => {
       if (!state.room.hashtags) {
         return []
@@ -69,7 +85,8 @@ export default defineComponent({
     return {
       state,
       hashtagList,
-      handleCreateRoom
+      handleCreateRoom,
+      upload
     }
   }
 })

@@ -1,6 +1,6 @@
 <template>
   <div class="rooms-show">
-    <h2>ルーム一覧</h2>
+    <h2>新着チャットルーム</h2>
     <div v-for="(room, index) in state.rooms" :key="index">
       <h2>
         <router-link :to="{ name: 'Room', params: { id: room.id }}">{{ room.title }}</router-link>
@@ -12,6 +12,8 @@
 <script>
 import { defineComponent, reactive } from '@vue/composition-api'
 import firebase from 'firebase'
+// Plugins
+import { roomsRef } from '@/plugins/firebase'
 export default defineComponent({
   setup() {
     // localstate
@@ -19,20 +21,16 @@ export default defineComponent({
       rooms: []
     })
     // created
-    firebase
-      .firestore()
-      .collection('rooms')
-      .get()
-      .then(snapshot => {
-        const docs = snapshot.docs
-        for (const doc of docs) {
-          const room = {
-            id: doc.id,
-            ...doc.data()
-          }
-          state.rooms.push(room)
+    roomsRef.get().then(snapshot => {
+      const docs = snapshot.docs
+      for (const doc of docs) {
+        const room = {
+          id: doc.id,
+          ...doc.data()
         }
-      })
+        state.rooms.push(room)
+      }
+    })
     return {
       state
     }

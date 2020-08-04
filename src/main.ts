@@ -4,6 +4,7 @@ import router from './router'
 // Plugins
 import '@/plugins/composition-api'
 import '@/plugins/firebase'
+import '@/plugins/font-awesome'
 
 Vue.config.productionTip = false
 

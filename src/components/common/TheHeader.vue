@@ -7,12 +7,14 @@
     </div>
     <div class="header__search">
       <input type="text" class="search-input" v-model="state.searchContent" />
-      <button @click="handleSearch">search</button>
+      <button @click="handleSearch"><font-awesome-icon icon="search" /></button>
     </div>
     <div class="header__right">
       <template v-if="getUser">
         <div class="header__navContainer">
-          <router-link :to="{  name: 'User', params: { id: getUser.id } }">{{ getUser.name }}</router-link>
+          <router-link :to="{ name: 'User', params: { id: getUser.id } }">{{
+            getUser.name
+          }}</router-link>
         </div>
         <div class="header__navContainer">
           <router-link to="/settings">settings</router-link>

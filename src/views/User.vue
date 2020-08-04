@@ -1,36 +1,39 @@
 <template>
   <div class="user">
-    <template v-if="state.pageUser">
-      <div class="user__profile">
-        <!--  -->
-        <div class="avater">
-          <img :src="state.pageUser.photoURL" width="120px" />
-        </div>
-        <!--  -->
-        <div>
-          <h1>{{ state.pageUser.name }}</h1>
-          <h1>自己紹介こんにちわ</h1>
-          <h1>参加しているコミュニティー</h1>
-          <h1>参加しているチャットルーム</h1>
-
-          <div v-for="(room, index ) in state.joined_rooms" :key="index">
-            <router-link :to="{ name: 'Room', params: { id: room.id }}">{{ room.title }}</router-link>
-            <p>{{ room.description }}</p>
+    <div class="user__content">
+      <template v-if="state.pageUser">
+        <div class="user__profile">
+          <div class="avater">
+            <img :src="state.pageUser.photoURL" width="120px" />
+          </div>
+          <div>
+            <h1>{{ state.pageUser.name }}</h1>
+            <h1>自己紹介こんにちわ</h1>
+            <h1>参加しているコミュニティー</h1>
+            <h1>参加しているチャットルーム</h1>
+            <div v-for="(room, index) in state.joined_rooms" :key="index">
+              <router-link :to="{ name: 'Room', params: { id: room.id } }">{{
+                room.title
+              }}</router-link>
+              <p>{{ room.description }}</p>
+            </div>
           </div>
         </div>
-        <!--  -->
-      </div>
-    </template>
-    <template v-else>
-      <div>
-        <h1>State 404 Error</h1>
-      </div>
-    </template>
+        <RoomCreater />
+      </template>
+      <template v-else>
+        <div>
+          <h1>State 404 Error</h1>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import firebase, { firestore } from 'firebase'
+// Components
+import RoomCreater from '@/components/common/RoomCreater.vue'
 // Plugins
 import useFirebase, { db } from '@/plugins/firebase'
 // Types
@@ -39,6 +42,9 @@ import { IUserPageState, IUser } from '@/types/user'
 import router from '@/router'
 
 export default defineComponent({
+  components: {
+    RoomCreater
+  },
   setup(_, ctx) {
     //
     // created
@@ -90,12 +96,14 @@ export default defineComponent({
 .user {
   width: 100%;
   min-height: 700px;
-  .user__profile {
+  .user__content {
     max-width: 700px;
     margin: 0 auto;
     padding: 10px;
-    display: flex;
-    flex-direction: row;
+    .user__profile {
+      display: flex;
+      flex-direction: row;
+    }
   }
 }
 </style>
