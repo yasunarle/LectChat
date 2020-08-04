@@ -8,17 +8,23 @@
         <h3>ジャンル: {{ state.roomData.genre }}</h3>
         <h3>オーナー: {{ state.roomData.owner_name }}</h3>
 
-        <div v-if="isJoinedRoom">
-          <button @click="handleLeaveRoom">Leave</button>
-        </div>
-        <div v-else>
-          <button @click="handleJoinRoom">参加</button>
+        <div v-if="!isOwner">
+          <div v-if="isJoinedRoom">
+            <button @click="handleLeaveRoom">Leave</button>
+          </div>
+          <div v-else>
+            <button @click="handleJoinRoom">参加</button>
+          </div>
         </div>
       </div>
       <!--  -->
       <div class="room__postForm">
         <!-- @keyup.enter="handlePost" -->
-        <textarea type="text" v-model="state.inputText" placeholder="公開コメントを入力..." />
+        <textarea
+          type="text"
+          v-model="state.inputText"
+          placeholder="公開コメントを入力..."
+        />
         <button @click="handlePost">送信</button>
       </div>
       <!--  -->
@@ -79,6 +85,12 @@ export default defineComponent({
         }
       }
     })
+    const isOwner = computed(() => {
+      // console.log(getUser.value.id, state.roomData.id)
+      if (getUser.value && state.roomData) {
+        return getUser.value.id === state.roomData.owner_id ? true : false
+      }
+    })
     function handlePost() {
       if (state.roomData) {
         postTranScript(state.roomData.id, state.inputText)
@@ -132,6 +144,7 @@ export default defineComponent({
       state,
       handlePost,
       isJoinedRoom,
+      isOwner,
       handleJoinRoom,
       handleLeaveRoom
     }

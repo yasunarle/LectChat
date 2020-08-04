@@ -8,14 +8,19 @@
           </div>
           <div>
             <h1>{{ state.pageUser.name }}</h1>
-            <h1>自己紹介こんにちわ</h1>
-            <h1>参加しているコミュニティー</h1>
-            <h1>参加しているチャットルーム</h1>
+            <h4 class="createdRooms__title">作成したチャットルーム</h4>
+            <template v-for="room in state.created_rooms">
+              <div>
+                <router-link :to="{ name: 'Room', params: { id: room.id } }">
+                  {{ room.title }}
+                </router-link>
+              </div>
+            </template>
+            <h4 class="createdRooms__title">参加しているチャットルーム</h4>
             <div v-for="(room, index) in state.joined_rooms" :key="index">
-              <router-link :to="{ name: 'Room', params: { id: room.id } }">{{
-                room.title
-              }}</router-link>
-              <p>{{ room.description }}</p>
+              <router-link :to="{ name: 'Room', params: { id: room.id } }">
+                {{ room.title }}
+              </router-link>
             </div>
           </div>
         </div>
@@ -35,7 +40,7 @@ import firebase, { firestore } from 'firebase'
 // Components
 import RoomCreater from '@/components/common/RoomCreater.vue'
 // Plugins
-import useFirebase, { db } from '@/plugins/firebase'
+import useFirebase, { db, usersRef, roomsRef } from '@/plugins/firebase'
 // Types
 import { IUserPageState, IUser } from '@/types/user'
 // Router
@@ -51,12 +56,13 @@ export default defineComponent({
     //
     const state = reactive<IUserPageState>({
       pageUser: null,
-      joined_rooms: []
+      joined_rooms: [],
+      created_rooms: []
     })
     //
     // firebase
     //
-    const userRef = db.collection('users').doc(ctx.root.$route.params.id)
+    const userRef = usersRef.doc(ctx.root.$route.params.id)
     userRef.get().then(snapshot => {
       if (snapshot.exists) {
         const pageUserObj = {
@@ -67,7 +73,7 @@ export default defineComponent({
         // joined_rooms
         if (state.pageUser) {
           for (const roomId of state.pageUser.joined_rooms) {
-            db.collection('rooms')
+            roomsRef
               .doc(roomId)
               .get()
               .then(roomSnapShot => {
@@ -80,6 +86,19 @@ export default defineComponent({
         }
       }
     })
+    roomsRef
+      .where('owner_id', '==', ctx.root.$route.params.id)
+      .get()
+      .then(snapshot => {
+        const docs = snapshot.docs
+        docs.forEach(doc => {
+          const room = {
+            id: doc.id,
+            ...doc.data()
+          }
+          state.created_rooms.push(room)
+        })
+      })
     //
     // useFirebase
     //
@@ -103,6 +122,10 @@ export default defineComponent({
     .user__profile {
       display: flex;
       flex-direction: row;
+      .createdRooms__title {
+        border-bottom: 1px solid black;
+        padding: 10px;
+      }
     }
   }
 }

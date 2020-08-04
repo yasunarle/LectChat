@@ -16,4 +16,5 @@ export interface IUser {
 export interface IUserPageState {
   pageUser: IUser | null
   joined_rooms: _Room[]
+  created_rooms: _Room[]
 }
