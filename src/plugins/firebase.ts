@@ -31,8 +31,11 @@ const state = reactive<IAuthState>({
   user: null,
   isProcessing: false
 })
-//
+// firestore
 export const db = firebase.firestore()
+export const usersRef = db.collection('users')
+export const roomsRef = db.collection('rooms')
+export const communitysRef = db.collection('communitys')
 
 export default function useFirebase() {
   //
@@ -52,7 +55,7 @@ export default function useFirebase() {
   //
   function createRoom(roomParams: RoomParams) {
     if (state.user) {
-      db.collection('rooms')
+      roomsRef
         .doc()
         .set({
           title: roomParams.name,
@@ -76,16 +79,12 @@ export default function useFirebase() {
   function joinRoom(roomId: string) {
     if (state.user) {
       state.user.joined_rooms.push(roomId)
-      db.collection('rooms')
-        .doc(roomId)
-        .update({
-          joined_users: firebase.firestore.FieldValue.arrayUnion(state.user.id)
-        })
-      db.collection('users')
-        .doc(state.user.id)
-        .update({
-          joined_rooms: firebase.firestore.FieldValue.arrayUnion(roomId)
-        })
+      roomsRef.doc(roomId).update({
+        joined_users: firebase.firestore.FieldValue.arrayUnion(state.user.id)
+      })
+      usersRef.doc(state.user.id).update({
+        joined_rooms: firebase.firestore.FieldValue.arrayUnion(roomId)
+      })
     } else {
       alert('ログインしてね')
     }
@@ -94,16 +93,12 @@ export default function useFirebase() {
     if (state.user) {
       const index = state.user.joined_rooms.indexOf(roomId)
       state.user.joined_rooms.splice(index, 1)
-      db.collection('rooms')
-        .doc(roomId)
-        .update({
-          joined_users: firebase.firestore.FieldValue.arrayRemove(state.user.id)
-        })
-      db.collection('users')
-        .doc(state.user.id)
-        .update({
-          joined_rooms: firebase.firestore.FieldValue.arrayRemove(roomId)
-        })
+      roomsRef.doc(roomId).update({
+        joined_users: firebase.firestore.FieldValue.arrayRemove(state.user.id)
+      })
+      usersRef.doc(state.user.id).update({
+        joined_rooms: firebase.firestore.FieldValue.arrayRemove(roomId)
+      })
       state.user.joined_rooms
     } else {
       alert('ログインしてね')
@@ -111,7 +106,7 @@ export default function useFirebase() {
   }
   function postTranScript(roomId: string, content: string) {
     if (state.user) {
-      db.collection('rooms')
+      roomsRef
         .doc(roomId)
         .collection('transcripts')
         .add({
@@ -137,7 +132,7 @@ export default function useFirebase() {
     firebase.auth().onAuthStateChanged(user => {
       try {
         if (user) {
-          const userRef = db.collection('users').doc(user.uid)
+          const userRef = usersRef.doc(user.uid)
           userRef.get().then(doc => {
             if (doc.exists) {
               const userObj = { ...doc.data() } as IUser
