@@ -14,7 +14,7 @@
           <h2>images</h2>
           <div class="settings__avatar">
             <template v-if="!getUser.photoURL == ''">
-              <img :src="getUser.photoURL" alt="avatar image" width="100%" />
+              <img :src="getUser.photoURL" alt="avatar image" height="100%" />
             </template>
             <template v-else>
               <img
@@ -66,14 +66,16 @@ export default defineComponent({
     function hanldeAvatar() {
       avatarImg.value.click()
     }
-    function onUploadAvater(event) {
+    function onUploadAvater(event: any) {
       const file = event.target.files[0]
-      const storageRef = storage.ref('images/' + file.name)
-      storageRef.put(file).then(() => {
-        storageRef.getDownloadURL().then(url => {
-          updatePhotoURL(url)
+      if (getUser.value) {
+        const storageRef = storage.ref('images/' + getUser.value.id + '.png')
+        storageRef.put(file).then(() => {
+          storageRef.getDownloadURL().then(url => {
+            updatePhotoURL(url)
+          })
         })
-      })
+      }
     }
     // onMounted
     onMounted(() => {
