@@ -10,7 +10,8 @@ const config: any = {
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
   storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.VUE_APP_FIREBASE_APP_ID
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID,
 }
 firebase.initializeApp(config)
 
@@ -29,7 +30,7 @@ interface RoomParams {
 // Local State
 const state = reactive<IAuthState>({
   user: null,
-  isProcessing: false
+  isProcessing: false,
 })
 // firestore
 export const db = firebase.firestore()
@@ -57,7 +58,7 @@ export default function useFirebase() {
   function updatePhotoURL(url: string) {
     if (state.user) {
       usersRef.doc(state.user.id).update({
-        photoURL: url
+        photoURL: url,
       })
     }
   }
@@ -78,10 +79,10 @@ export default function useFirebase() {
           owner_name: state.user.name,
           community_id: '',
           created_at: firebase.firestore.FieldValue.serverTimestamp(),
-          joined_users: []
+          joined_users: [],
           // + should add subcollection +
         })
-        .catch(err => {
+        .catch((err) => {
           alert(err.message)
         })
     } else {
@@ -92,10 +93,10 @@ export default function useFirebase() {
     if (state.user) {
       state.user.joined_rooms.push(roomId)
       roomsRef.doc(roomId).update({
-        joined_users: firebase.firestore.FieldValue.arrayUnion(state.user.id)
+        joined_users: firebase.firestore.FieldValue.arrayUnion(state.user.id),
       })
       usersRef.doc(state.user.id).update({
-        joined_rooms: firebase.firestore.FieldValue.arrayUnion(roomId)
+        joined_rooms: firebase.firestore.FieldValue.arrayUnion(roomId),
       })
     } else {
       alert('ログインしてね')
@@ -106,10 +107,10 @@ export default function useFirebase() {
       const index = state.user.joined_rooms.indexOf(roomId)
       state.user.joined_rooms.splice(index, 1)
       roomsRef.doc(roomId).update({
-        joined_users: firebase.firestore.FieldValue.arrayRemove(state.user.id)
+        joined_users: firebase.firestore.FieldValue.arrayRemove(state.user.id),
       })
       usersRef.doc(state.user.id).update({
-        joined_rooms: firebase.firestore.FieldValue.arrayRemove(roomId)
+        joined_rooms: firebase.firestore.FieldValue.arrayRemove(roomId),
       })
       state.user.joined_rooms
     } else {
@@ -126,9 +127,9 @@ export default function useFirebase() {
           poster_name: state.user.name,
           created_at: firebase.firestore.FieldValue.serverTimestamp(),
           // Params
-          content: content
+          content: content,
         })
-        .catch(err => {
+        .catch((err) => {
           alert(err.message)
         })
     } else {
@@ -141,11 +142,11 @@ export default function useFirebase() {
   //
   onMounted(() => {
     state.isProcessing = true
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged((user) => {
       try {
         if (user) {
           const userRef = usersRef.doc(user.uid)
-          userRef.get().then(doc => {
+          userRef.get().then((doc) => {
             if (doc.exists) {
               const userObj = { ...doc.data() } as IUser
               userUpdate(userObj)
@@ -155,7 +156,7 @@ export default function useFirebase() {
                 name: user.displayName,
                 photoURL: user.photoURL,
                 created_rooms: [],
-                joined_rooms: []
+                joined_rooms: [],
               } as IUser
               userRef.set(userObj)
               userUpdate(userObj)
@@ -176,6 +177,6 @@ export default function useFirebase() {
     postTranScript,
     leaveRoom,
     getIsProcessing,
-    updatePhotoURL
+    updatePhotoURL,
   }
 }
