@@ -15,9 +15,9 @@ import TheFooter from '@/components/common/TheFooter.vue'
 export default defineComponent({
   components: {
     TheHeader,
-    TheFooter
+    TheFooter,
   },
-  setup() {}
+  setup() {},
 })
 </script>
 
@@ -28,6 +28,12 @@ body {
   * {
     padding: 0px;
     margin: 0px;
+    box-sizing: border-box;
+  }
+
+  a {
+    text-decoration: none;
+    color: #7f5af0;
   }
   textarea {
     border: none;
@@ -35,25 +41,33 @@ body {
     color: #4f5959;
     resize: none;
   }
-  a {
-    text-decoration: none;
-    color: #4fc08d;
-  }
 }
 .app__btn {
+  // div
+  width: fit-content;
+  padding: 8px 16px;
   background-color: #2ea6ff;
+  color: none;
   border: none;
   border-radius: 3px;
-  padding: 10px 20px;
+  cursor: pointer;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #4f5959;
+  background: #f7fafc;
 }
-.app-logo {
-  font-size: 30px;
-  font-weight: bold;
+.app__logo {
+  // div
+
+  a {
+    font-size: 30px;
+    font-weight: bold;
+    background-color: #1fd1f9;
+    background-image: linear-gradient(315deg, #2ea6ff 0%, #7f5af0 74%);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
 }
 </style>

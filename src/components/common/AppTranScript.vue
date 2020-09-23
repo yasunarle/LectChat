@@ -26,7 +26,7 @@ export default defineComponent({
     content: String,
     poster_id: String,
     poster_name: String,
-    created_at: Object
+    created_at: Object,
   },
   setup(props: Props) {
     const formatedHour =
@@ -47,19 +47,22 @@ export default defineComponent({
 
     return {
       props,
-      formatedTime
+      formatedTime,
     }
-  }
+  },
 })
 </script>
 <style lang="scss">
 .transcript {
   padding: 8px;
   display: flex;
+  p {
+    color: #16161a;
+  }
   .formatedTime {
     padding-top: 8px;
     font-size: 14px;
-    color: #99999999;
+    color: #94a1b2;
   }
 }
 </style>
