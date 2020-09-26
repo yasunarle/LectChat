@@ -27,7 +27,7 @@ interface RoomParams {
   hashtagList: string[]
 }
 
-// Local State
+// Global State
 const state = reactive<IAuthState>({
   user: null,
   isProcessing: false,
@@ -40,21 +40,15 @@ export const roomsRef = db.collection('rooms')
 export const communitysRef = db.collection('communitys')
 
 export default function useFirebase() {
-  //
   // Getters
-  //
   const getUser = computed(() => state.user)
   const getIsProcessing = computed(() => state.isProcessing)
-  //
   // Mutations
-  //
   function userUpdate(user: IUser | null) {
     state.user = user
   }
-  //
-  // Actions 非同期
-  // User Settings 関係
-  //
+  // Actions
+  // - User 関係
   function updatePhotoURL(url: string) {
     if (state.user) {
       usersRef.doc(state.user.id).update({
@@ -62,10 +56,7 @@ export default function useFirebase() {
       })
     }
   }
-
-  //
   // - Room 関係
-  //
   function createRoom(roomParams: RoomParams) {
     if (state.user) {
       roomsRef
@@ -98,9 +89,9 @@ export default function useFirebase() {
       usersRef.doc(state.user.id).update({
         joined_rooms: firebase.firestore.FieldValue.arrayUnion(roomId),
       })
-    } else {
-      alert('ログインしてね')
+      return
     }
+    alert('ログインしてね')
   }
   function leaveRoom(roomId: string) {
     if (state.user) {
@@ -113,9 +104,9 @@ export default function useFirebase() {
         joined_rooms: firebase.firestore.FieldValue.arrayRemove(roomId),
       })
       state.user.joined_rooms
-    } else {
-      alert('ログインしてね')
+      return
     }
+    alert('ログインしてね')
   }
   function postTranScript(roomId: string, content: string) {
     if (state.user) {
@@ -132,14 +123,11 @@ export default function useFirebase() {
         .catch((err) => {
           alert(err.message)
         })
-    } else {
-      alert('To chat in a room, Please Sign in')
+      return
     }
+    alert('To chat in a room, Please Sign in')
   }
-
-  //
-  // ローディング時
-  //
+  // ローディング時
   onMounted(() => {
     state.isProcessing = true
     firebase.auth().onAuthStateChanged((user) => {

@@ -3,9 +3,6 @@
     <div class="room__header">
       <div class="content">
         <h1 class="title">{{ state.roomData.title }}</h1>
-        <!-- <h2>説明文: {{ state.roomData.description }}</h2> -->
-        <!-- <h3>ジャンル: {{ state.roomData.genre }}</h3> -->
-        <!-- <h3>オーナー: {{ state.roomData.owner_name }}</h3> -->
         <div v-if="!isOwner">
           <div v-if="isJoinedRoom">
             <div class="app__btn" @click="handleLeaveRoom">Leave</div>
@@ -71,24 +68,18 @@ export default defineComponent({
     AppTranScript,
   },
   setup(_, ctx) {
-    //
     // localstate
-    //
     const state = reactive<IRoomPageState>({
       roomData: null,
       inputText: '',
     })
-    //
     // useFirebase
-    //
     const { postTranScript, joinRoom, leaveRoom, getUser } = useFirebase()
     const isJoinedRoom = computed(() => {
-      if (state.roomData) {
-        if (getUser.value) {
-          return getUser.value.joined_rooms.indexOf(state.roomData.id) >= 0
-            ? true
-            : false
-        }
+      if (state.roomData && getUser.value) {
+        return getUser.value.joined_rooms.indexOf(state.roomData.id) >= 0
+          ? true
+          : false
       }
     })
     const isOwner = computed(() => {
@@ -113,9 +104,7 @@ export default defineComponent({
         leaveRoom(state.roomData.id)
       }
     }
-    //
     // onMounted
-    //
     onMounted(() => {
       const roomId = ctx.root.$route.params.id
       const roomRef = firebase.firestore().collection('rooms').doc(roomId)
@@ -142,7 +131,6 @@ export default defineComponent({
         }
       })
     })
-
     return {
       state,
       handlePost,

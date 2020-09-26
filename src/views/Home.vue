@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <div class="home__content">
-      <div class="left">
+      <div class="start">
         <RoomsShow />
       </div>
-      <div class="right">
-        <div class="right__content">
+      <div class="end">
+        <div class="end__content">
           <p>PR</p>
         </div>
       </div>
@@ -32,26 +32,22 @@ export default defineComponent({
 .home {
   padding: 20px;
   min-height: 800px;
-  background: #fffffe;
-  img {
-    height: 200px;
-  }
   .home__content {
     max-width: 1000px;
     margin: auto;
     display: flex;
     flex-direction: row;
-    .left {
+    .start {
       flex: 2;
     }
-    .right {
+    .end {
       flex: 1;
       margin: 10px;
       padding: 10px;
       border: 4px solid #16161a;
       border-radius: 2px;
       color: #fffffe;
-      .right__content {
+      .end__content {
         font-size: 20px;
         font-weight: bold;
         min-height: 500px;

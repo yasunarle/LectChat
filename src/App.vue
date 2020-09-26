@@ -30,7 +30,6 @@ body {
     margin: 0px;
     box-sizing: border-box;
   }
-
   a {
     text-decoration: none;
     color: #7f5af0;
@@ -42,6 +41,13 @@ body {
     resize: none;
   }
 }
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f7fafc;
+}
+// app__
 .app__btn {
   // div
   width: fit-content;
@@ -52,15 +58,8 @@ body {
   border-radius: 3px;
   cursor: pointer;
 }
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #f7fafc;
-}
 .app__logo {
   // div
-
   a {
     font-size: 30px;
     font-weight: bold;
